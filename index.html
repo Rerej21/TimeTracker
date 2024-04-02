@@ -52,7 +52,7 @@
         font-size: 16px;
         line-height: 1.5;
     }
-    #stop-button {
+    .activity-button {
         padding: 10px 20px;
         font-size: 18px;
         background-color: #007bff;
@@ -62,7 +62,7 @@
         cursor: pointer;
         transition: background-color 0.3s;
     }
-    #stop-button:hover {
+    .activity-button:hover {
         background-color: #0056b3;
     }
     .error-message {
@@ -76,9 +76,14 @@
         <h1>Activity Timer</h1>
         <div id="timer">00:00:00</div>
         <input type="text" id="activity-input" placeholder="Enter activity">
+        <select id="location-select" style="margin: 10px;">
+            <option value="">Select Location</option>
+            <option value="Florida">Florida</option>
+            <option value="New Hampshire">New Hampshire</option>
+        </select>
         <br>
-        <button onclick="startTimer()" id="stop-button">Start Time Tracking</button>
-        <button onclick="stopTimer()" id="stop-button">Stop Time Tracking</button>
+        <button onclick="startTimer()" class="activity-button">Start Time Tracking</button>
+        <button onclick="stopTimer()" class="activity-button">Stop Time Tracking</button>
         <div id="activity-list"></div>
         <div id="error-message" class="error-message"></div>
     </div>
@@ -90,8 +95,9 @@
 
         function startTimer() {
             let activity = document.getElementById("activity-input").value.trim();
-            if (activity === "") {
-                document.getElementById("error-message").textContent = "Please enter an activity before starting the timer.";
+            let location = document.getElementById("location-select").value.trim();
+            if (activity === "" || location === "") {
+                document.getElementById("error-message").textContent = "Please enter an activity and select a location before starting the timer.";
                 return;
             }
             document.getElementById("error-message").textContent = "";
