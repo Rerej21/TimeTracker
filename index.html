@@ -105,6 +105,7 @@
         <button onclick="stopTimer()" class="activity-button" id="stop-button" disabled>Stop Time Tracking</button>
         <div id="activity-list"></div>
         <div id="error-message" class="error-message"></div>
+        <button onclick="generateReport()" class="activity-button" id="report-button" style="display: none;">Generate Report</button>
     </div>
 
     <script>
@@ -124,6 +125,7 @@
             timerInterval = setInterval(updateTimer, 1000);
             document.getElementById("start-button").disabled = true;
             document.getElementById("stop-button").disabled = false;
+            document.getElementById("report-button").style.display = "none";
         }
 
         function updateTimer() {
@@ -147,6 +149,7 @@
                 document.getElementById("timer").innerHTML = "00:00:00";
                 document.getElementById("start-button").disabled = false;
                 document.getElementById("stop-button").disabled = true;
+                document.getElementById("report-button").style.display = "inline-block";
             }
         }
 
@@ -158,6 +161,44 @@
                 p.textContent = `${item.activity}: ${item.time}`;
                 activityList.appendChild(p);
             });
+        }
+
+        function generateReport() {
+            let totalHoursFL = 0;
+            let totalMinutesFL = 0;
+            let totalSecondsFL = 0;
+            let totalHoursNH = 0;
+            let totalMinutesNH = 0;
+            let totalSecondsNH = 0;
+
+            activities.forEach(function(item) {
+                let activity = item.activity;
+                let timeComponents = item.time.split(':');
+                let hours = parseInt(timeComponents[0]);
+                let minutes = parseInt(timeComponents[1]);
+                let seconds = parseInt(timeComponents[2]);
+                if (activity.startsWith("FL")) {
+                    totalHoursFL += hours;
+                    totalMinutesFL += minutes;
+                    totalSecondsFL += seconds;
+                } else if (activity.startsWith("NH")) {
+                    totalHoursNH += hours;
+                    totalMinutesNH += minutes;
+                    totalSecondsNH += seconds;
+                }
+            });
+
+            totalMinutesFL += Math.floor(totalSecondsFL / 60);
+            totalSecondsFL = totalSecondsFL % 60;
+            totalHoursFL += Math.floor(totalMinutesFL / 60);
+            totalMinutesFL = totalMinutesFL % 60;
+
+            totalMinutesNH += Math.floor(totalSecondsNH / 60);
+            totalSecondsNH = totalSecondsNH % 60;
+            totalHoursNH += Math.floor(totalMinutesNH / 60);
+            totalMinutesNH = totalMinutesNH % 60;
+
+            alert(`Total Time in Florida: ${totalHoursFL} hours, ${totalMinutesFL} minutes, and ${totalSecondsFL} seconds\nTotal Time in New Hampshire: ${totalHoursNH} hours, ${totalMinutesNH} minutes, and ${totalSecondsNH} seconds`);
         }
     </script>
 </body>
